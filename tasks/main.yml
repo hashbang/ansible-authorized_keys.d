@@ -1,0 +1,24 @@
+- name: Add keys for group {{ group }}
+  sudo: False
+  tasks:
+    - name: Add inline keys for user {{ item }}
+      authorized_keys:
+        user: core
+        key: {{ users[item].key }}
+        path: {{ '/home/core/.ssh/authorized_keys.d/' + item }}
+        manage_dir: no
+      with_items: groups[group]
+      when: users[item].key is defined
+    - name: Check for in-repo key for user {{ item }}
+      local_action: stat path={{ 'files/keys/' + item + '.pub' }}
+      ignore_errors: True
+      register: key
+    - name: Add in-repo keys for user {{ item }}
+      authorized_keys:
+        user: core
+        key: {{ lookup('file', 'files/keys/' + item + '.pub') }}
+        path: {{ '/home/core/.ssh/authorized_keys.d/' + item }}
+        manage_dir: no
+      when: key.stat.exists
+
+  with_items: groups[group]
