@@ -12,6 +12,7 @@
     - name: Check for in-repo key for user {{ item }}
       local_action: stat path={{ 'files/keys/' + item + '.pub' }}
       ignore_errors: True
+      no_log: True
       register: key
     - name: Add in-repo keys for user {{ item }}
       authorized_keys:
