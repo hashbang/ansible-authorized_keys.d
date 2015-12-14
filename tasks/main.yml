@@ -23,3 +23,8 @@
       when: key.stat.exists
 
   with_items: groups[group]
+
+- name: Run update-ssh-keys
+  sudo: False
+  command: update-ssh-keys -l
+  no_log: True
