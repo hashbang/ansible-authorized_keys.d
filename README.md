@@ -18,8 +18,8 @@ It assumes the presence of `vars/groups.yml` and `vars/users.yml`:
 - each user is a key in `users.yml`, under `users`, containing
   an optional `key` attribute which is passed to [`authorized_keys`](
   https://docs.ansible.com/ansible/authorized_key_module.html).
-  Keys can also be put under `files/keys/$user.pub`.
-  Both can be combined.
+  Otherwise, the key must be put under `files/keys/$user.pub`.
+  Both options **cannot** be combined.
 
 _NOTE_: This role can be used without `gather_facts` so as to speed up
 	execution.

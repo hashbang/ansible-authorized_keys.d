@@ -1,27 +1,21 @@
-- name: Add keys for group {{ group }}
+- name: Add inline keys for user {{ item }}
   sudo: False
-  tasks:
-    - name: Add inline keys for user {{ item }}
-      authorized_keys:
-        user: core
-        key: {{ users[item].key }}
-        path: {{ '/home/core/.ssh/authorized_keys.d/' + item }}
-        manage_dir: no
-      with_items: groups[group]
-      when: users[item].key is defined
-    - name: Check for in-repo key for user {{ item }}
-      local_action: stat path={{ 'files/keys/' + item + '.pub' }}
-      ignore_errors: True
-      no_log: True
-      register: key
-    - name: Add in-repo keys for user {{ item }}
-      authorized_keys:
-        user: core
-        key: {{ lookup('file', 'files/keys/' + item + '.pub') }}
-        path: {{ '/home/core/.ssh/authorized_keys.d/' + item }}
-        manage_dir: no
-      when: key.stat.exists
+  authorized_keys:
+    user: core
+    key: {{ users[item].key }}
+    path: {{ '/home/core/.ssh/authorized_keys.d/' + item }}
+    manage_dir: no
+  when: users[item].key is defined
+  with_items: groups[group]
 
+- name: Add in-repo keys for user {{ item }}
+  sudo: False
+  authorized_keys:
+    user: core
+    key: {{ lookup('file', 'files/keys/' + item + '.pub') }}
+    path: {{ '/home/core/.ssh/authorized_keys.d/' + item }}
+    manage_dir: no
+  when: users[item].key is not defined
   with_items: groups[group]
 
 - name: Run update-ssh-keys
