@@ -31,7 +31,7 @@ _NOTE_: This role can be used without `gather_facts` so as to speed up
 - hosts: coreos
   gather_facts: False
   roles:
-  - coreos-authorized_keys
+  - coreos-authorized_keys group=admins
 ```
 
 
