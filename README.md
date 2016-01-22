@@ -12,11 +12,11 @@ and calling `update-ssh-keys` at the end.
 
 The roles only takes a `group` variable as argument.
 
-It assumes the presence of `vars/groups.yml` and `vars/users.yml`:
-- each group is represented by a key in `groups.yml`, under `groups`,
+It assumes the presence of two dicts: `user_groups` and `users`:
+- each group is represented by a key in `user_groups`,
   containing a list of users;
-- each user is a key in `users.yml`, under `users`, containing
-  an optional `key` attribute which is passed to [`authorized_keys`](
+- each user is a key in `users`, containing an optional `key` attribute
+  which is passed to [`authorized_keys`](
   https://docs.ansible.com/ansible/authorized_key_module.html).
   Otherwise, the key must be put under `files/keys/$user.pub`.
   Both options **cannot** be combined.
@@ -31,7 +31,7 @@ _NOTE_: This role can be used without `gather_facts` so as to speed up
 - hosts: coreos
   gather_facts: False
   roles:
-  - coreos-authorized_keys group=admins
+  - { role: coreos-authorized_keys, group: admins }
 ```
 
 
