@@ -1,3 +1,13 @@
+- name: Delete unknown keys
+  sudo: False
+  tasks:
+    - shell: ls -1 /home/core/.ssh/authorized_keys.d/
+      register: keys
+    - file: path=/home/core/.ssh/authorized_keys.d/{{ item }} state=absent
+      with_items: keys.stdout_lines
+      when: item not in user_groups[group]
+  when: exclusive
+
 - name: Add inline keys for user {{ item }}
   sudo: False
   authorized_key:
@@ -19,16 +29,6 @@
     exclusive: exclusive
   when: users[item].key is not defined
   with_items: user_groups[group]
-
-- name: Delete unknown keys
-  sudo: False
-  tasks:
-    - shell: ls -1 /home/core/.ssh/authorized_keys.d/
-      register: keys
-    - file: path=/home/core/.ssh/authorized_keys.d/{{ item }} state=absent
-      with_items: keys.stdout_lines
-      when: item not in user_groups[group]
-  when: exclusive
 
 - name: Run update-ssh-keys
   sudo: False
