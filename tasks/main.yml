@@ -1,3 +1,13 @@
+- name: Delete unknown keys
+  become: False
+  tasks:
+    - shell: ls -1 /home/core/.ssh/authorized_keys.d/
+      register: keys
+    - file: path=/home/core/.ssh/authorized_keys.d/{{ item }} state=absent
+      with_items: keys.stdout_lines
+      when: item not in user_groups[group]
+  when: "{{ exclusive }}"
+
 - name: Add keys for user {{ item }}
   become: False
   authorized_key:
@@ -5,6 +15,7 @@
     key: "{{ users[item].get('key') or lookup('file', 'files/keys/' + item + '.pub') }}"
     path: "{{ '/home/core/.ssh/authorized_keys.d/' + item }}"
     manage_dir: no
+    exclusive: "{{ exclusive }}"
   with_items: user_groups[group]
 
 - name: Run update-ssh-keys
