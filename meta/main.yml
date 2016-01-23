@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: The fox in the shell <KellerFuchs@hashbang.sh>
+  description: Managing SSH keys in CoreOS
+  company: Hashbang, Inc.
+  license: ISC
+  min_ansible_version: 1.9
+  platforms:
+  - name: CoreOS
+    versions:
+    - all
+  galaxy_tags:
+  - cloud
+  - coreos
+  - ssh
+  - system
+
+dependencies: []
