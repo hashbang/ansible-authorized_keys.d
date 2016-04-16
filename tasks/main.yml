@@ -1,5 +1,5 @@
 - name: Add inline keys for user {{ item }}
-  sudo: False
+  become: False
   authorized_key:
     user: core
     key: "{{ users[item].key }}"
@@ -9,7 +9,7 @@
   with_items: user_groups[group]
 
 - name: Add in-repo keys for user {{ item }}
-  sudo: False
+  become: False
   authorized_key:
     user: core
     key: "{{ lookup('file', 'files/keys/' + item + '.pub') }}"
@@ -19,6 +19,6 @@
   with_items: user_groups[group]
 
 - name: Run update-ssh-keys
-  sudo: False
+  become: False
   command: update-ssh-keys -l
   no_log: True
