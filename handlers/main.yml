@@ -1,0 +1,4 @@
+- name: update authorized_keys
+  become: False
+  command: update-ssh-keys -l
+  no_log: True
