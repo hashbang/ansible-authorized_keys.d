@@ -5,14 +5,14 @@
   when: "{{ exclusive }}"
   changed_when: False
 
-- name: Delete keys for user {{ item }}
+- name: Delete keys for non-existing users
   file: path=/home/core/.ssh/authorized_keys.d/{{ item }} state=absent
   when: exclusive and item not in user_groups[group]
   with_items: "{{ keys.stdout_lines }}"
   notify:
     - update authorized_keys
 
-- name: Add keys for user {{ item }}
+- name: Synchronize keys for users
   become: False
   authorized_key:
     user: core
