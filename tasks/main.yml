@@ -9,6 +9,8 @@
   file: path=/home/core/.ssh/authorized_keys.d/{{ item }} state=absent
   when: exclusive and item not in user_groups[group]
   with_items: "{{ keys.stdout_lines }}"
+  notify:
+    - update authorized_keys
 
 - name: Add keys for user {{ item }}
   become: False
@@ -19,8 +21,5 @@
     manage_dir: no
     exclusive: "{{ exclusive }}"
   with_items: "{{ user_groups[group] }}"
-
-- name: Run update-ssh-keys
-  become: False
-  command: update-ssh-keys -l
-  no_log: True
+  notify:
+    - update authorized_keys
