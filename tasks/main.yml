@@ -1,12 +1,14 @@
-- name: Delete unknown keys
+- name: List keys
   become: False
-  tasks:
-    - shell: ls -1 /home/core/.ssh/authorized_keys.d/
-      register: keys
-    - file: path=/home/core/.ssh/authorized_keys.d/{{ item }} state=absent
-      with_items: keys.stdout_lines
-      when: item not in user_groups[group]
+  shell: ls -1 /home/core/.ssh/authorized_keys.d/
+  register: keys
   when: "{{ exclusive }}"
+  changed_when: False
+
+- name: Delete keys for user {{ item }}
+  file: path=/home/core/.ssh/authorized_keys.d/{{ item }} state=absent
+  when: exclusive and item not in user_groups[group]
+  with_items: "{{ keys.stdout_lines }}"
 
 - name: Add keys for user {{ item }}
   become: False
@@ -16,7 +18,7 @@
     path: "{{ '/home/core/.ssh/authorized_keys.d/' + item }}"
     manage_dir: no
     exclusive: "{{ exclusive }}"
-  with_items: user_groups[group]
+  with_items: "{{ user_groups[group] }}"
 
 - name: Run update-ssh-keys
   become: False
