@@ -10,7 +10,10 @@ and calling `update-ssh-keys` at the end.
 
 ## Interface
 
-The roles only takes a `group` variable as argument.
+The roles takes 2 parameters:
+- `exclusive` can be set to `yes` (defaults to `no`) to delete SSH keys
+  that are not present in Ansible;
+- `group` must be set to the name of the user group that is given access.
 
 It assumes the presence of two dicts: `user_groups` and `users`:
 - each group is represented by a key in `user_groups`,
