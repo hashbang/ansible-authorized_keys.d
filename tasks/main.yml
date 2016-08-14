@@ -1,6 +1,6 @@
 - name: List keys
   become: False
-  shell: ls -1 /home/core/.ssh/authorized_keys.d/
+  command: ls -1 /home/core/.ssh/authorized_keys.d/
   register: keys
   when: "{{ exclusive }}"
   changed_when: False
