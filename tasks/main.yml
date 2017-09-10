@@ -2,7 +2,7 @@
   become: False
   command: ls -1 /home/core/.ssh/authorized_keys.d/
   register: keys
-  always_run: yes
+  check_mode: no
   when: "{{ exclusive }}"
   changed_when: False
 
