@@ -2,15 +2,14 @@
   when: "{{ exclusive }}"
   block:
     - name: List keys
-      command: ls -1 /home/core/.ssh/authorized_keys.d/
+      find:
+        paths: /home/core/.ssh/authorized_keys.d/
       register: keys
-      check_mode: no
-      changed_when: False
 
     - name: Delete keys for non-existing users
       file: path=/home/core/.ssh/authorized_keys.d/{{ item }} state=absent
       when: item not in user_groups[group]
-      with_items: "{{ keys.stdout_lines }}"
+      with_items: "{{ keys.files | map(attribute='path') | map('basename') | list }}"
       notify:
         - update authorized_keys
 

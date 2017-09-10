@@ -8,7 +8,9 @@ correctly, by writing a user's keys to`~core/.ssh/authorized_keys.d/`
 and calling `update-ssh-keys` at the end.
 
 
-## Interface
+## Requirements
+
+The role uses Ansible's `find` module, which is available in the 2.x releases.
 
 The roles takes 2 parameters:
 - `exclusive` can be set to `yes` (defaults to `no`) to delete SSH keys
