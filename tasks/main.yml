@@ -1,5 +1,5 @@
 - become: False
-  when: "{{ exclusive }}"
+  when: exclusive
   block:
     - name: List keys
       find:
